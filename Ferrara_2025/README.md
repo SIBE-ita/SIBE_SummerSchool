@@ -9,7 +9,11 @@
 
 # Main lecturers
 
-INSERT LECTURES
+- Simona Secomandi
+- Guido Gallo
+- Chiara Barbieri
+- Claudio Ottoni
+- Clàudia Fontserè
 
 # TIMETABLE
 
