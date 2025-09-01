@@ -35,5 +35,3 @@
 - Valentina Peona
 - Patricia Santos
 - Teresa Vizzari
-
-# SERATA GIOCHI (CARTINA + INFO HANGAR)
