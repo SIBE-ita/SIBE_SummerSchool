@@ -5,7 +5,6 @@
 
 ### Go to the official SIBE SUMMER SCHOOL 2025 website
 
-INSERT FIG CASTLE
 ![alt text](https://github.com/SIBE-ita/SIBE_SummerSchool/blob/main/Ferrara_2025/Logo.png?raw=true)
 
 # Main lecturers
