@@ -27,6 +27,13 @@
   
 # ORGANIZERS
 
-INSERT
+- Roberto Biello
+- Rajiv Boscolo Agostini
+- Giulia Fabbri
+- Alessandro Formaggioni
+- Giobbe Forni
+- Valentina Peona
+- Patricia Santos
+- Teresa Vizzari
 
 # SERATA GIOCHI (CARTINA + INFO HANGAR)
