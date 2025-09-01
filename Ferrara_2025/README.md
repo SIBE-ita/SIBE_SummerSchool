@@ -6,7 +6,7 @@
 ### Go to the official SIBE SUMMER SCHOOL 2025 website
 
 INSERT FIG CASTLE
-LOGO SIBE
+!(Logo.png)
 
 # Main lecturers
 
