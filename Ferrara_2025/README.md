@@ -17,8 +17,12 @@
 
 # TIMETABLE
 
-INSERT
-
+- Sunday 7/09 14.00-19.00 Presentations and UNIX
+- Monday 8/09 9.30-18.00 Comparative genomics
+- Tuesday 9/09 9.30-18.00 Population genomics
+- Wednesday 10/09 9.30-18.00 Conservation genomics
+- Thursday 11/09 9.30-13.00 Grant writing mentorship
+  
 # ORGANIZERS
 
 INSERT
