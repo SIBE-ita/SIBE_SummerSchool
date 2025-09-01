@@ -6,7 +6,7 @@
 ### Go to the official SIBE SUMMER SCHOOL 2025 website
 
 INSERT FIG CASTLE
-!(Logo.png)
+![alt text](https://github.com/raj94b/SIBE_SummerSchool/blob/main/Logo.png?raw=true
 
 # Main lecturers
 
