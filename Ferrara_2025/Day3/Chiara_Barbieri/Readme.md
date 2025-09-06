@@ -129,9 +129,13 @@ affiliation of the language spoken by each population.
 ------------------------------------------------------------------------
 
 # PLINK
-#To use this software we will open another terminal activating the conda environment with: conda activate bioinf
-Available at <https://www.cog-genomics.org/plink/1.9/>. You can use it
-by calling the command in your terminal as
+
+Available at <https://www.cog-genomics.org/plink/1.9/>.
+#To use this software we will open another terminal activating the conda environment with:
+
+    conda activate bioinf
+
+You can use it by calling the command in your terminal as
 
     plink
 
