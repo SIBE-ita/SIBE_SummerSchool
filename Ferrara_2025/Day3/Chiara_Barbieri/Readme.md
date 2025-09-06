@@ -568,7 +568,7 @@ It takes `plink` format input files.
 
 Run admixture in your terminal as
 
-    /mnt/condivisione/programmi/admixture_linux-1.3.0/admixture
+    admixture_linux-1.3.0/admixture
 
 ### Pruning
 
