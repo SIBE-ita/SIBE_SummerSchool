@@ -26,7 +26,7 @@ For this practical you will be working with:
 
 In the terminal, download this github folder as ….
 
-***Pease install*** the packages we will need:
+***Please install*** the packages we will need:
 
     install.packages(c("maps", "ggrepel", "ggplot2", "tidyverse", "ape", "readr", "tidypopgen", "ggtree", "phytools", "reshape", "scatterpie"), repos="http://cran.us.r-project.org")
 
