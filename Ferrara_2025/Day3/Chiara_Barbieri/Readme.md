@@ -26,11 +26,13 @@ For this practical you will be working with:
 
 In the terminal, download this github folder as ….
 
-***Teresa: please install*** the packages we will need:
+***Pease install*** the packages we will need:
 
     install.packages(c("maps", "ggrepel", "ggplot2", "tidyverse", "ape", "readr", "tidypopgen", "ggtree", "phytools", "reshape", "scatterpie"), repos="http://cran.us.r-project.org")
 
-Set the working directory in your RStudio pointing to your computer
+Deactivate conda base environment if needed: conda deacticvate
+
+Set the working directory in your R pointing to your computer
 location where you downloaded the files. (Session –&gt; Set Working
 Directory –&gt; Choose Directory)
 
