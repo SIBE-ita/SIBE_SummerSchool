@@ -566,6 +566,10 @@ beforehand.
 
 It takes `plink` format input files.
 
+Make admixture executable with
+
+    chmod 777 admixture_linux-1.3.0/admixture
+
 Run admixture in your terminal as
 
     admixture_linux-1.3.0/admixture
