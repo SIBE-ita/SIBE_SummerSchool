@@ -23,12 +23,12 @@ For this practical you will be working with:
 -   The terminal of your computer
 -   Your local RStudio
 -   A internet browser
+-   A parallel terminal with the conda environment for specific R packages
 
-In the terminal, download this github folder as ….
+In the terminal, download the whole SIBE summer school folder as 
 
-***We already installed*** the packages we will need:
+    git clone https://github.com/SIBE-ita/SIBE_SummerSchool.git
 
-    #install.packages(c("maps", "ggrepel", "ggplot2", "tidyverse", "ape", "readr", "tidypopgen", "ggtree", "phytools", "reshape", "scatterpie"), repos="http://cran.us.r-project.org")
 
 Deactivate conda base environment if needed:
 
@@ -37,6 +37,9 @@ Deactivate conda base environment if needed:
 Set the working directory in your R pointing to your computer
 location where you downloaded the files. (Session –&gt; Set Working
 Directory –&gt; Choose Directory)
+
+The genotype exercise file is too heavy to be stored in Github. You can download it from here: https://drive.google.com/drive/folders/1kqdUFLaDe13E-7h2n9prKwY2Sc5eIDH_?usp=sharing
+
 
 ## A dataset of Human Diversity
 
@@ -351,7 +354,7 @@ added to the gen\_tibble as column “population”.
 
 
     genos <- gen_tibble(
-      x = "/Users/chiarabarbieri/Documents/WorkshopSIBE/EurasiaSelection.bed",  # prefix of your .bed/.bim/.fam files
+      x = "/Users/chiarabarbieri/Documents/WorkshopSIBE/EurasiaSelection.bed",  # Replace with the full prefix of your .bed/.bim/.fam files
       quiet = TRUE             # optional: suppress progress messages
     )
     # This will calculate the Weir & Cockerham FST values for all pairwise population comparisons.
@@ -373,7 +376,11 @@ How to display population distances? We can use a tree visualization,
 keeping in mind that this does not correspond to actual population
 evolutionary and demographic pathway, but just as a graphic
 representation of relative distances. We can use a Neighbor-Joining tree
-display as implemented in the package ‘ape’.
+display as implemented in the package ‘ape’. Note that the package 'ggtree' used to visualize trees does some conflict with the R version and tidypopgen, so we will use it by activating the 
+
+    conda activate popgen
+
+Back in R:
 
     library(ape)
 
@@ -411,8 +418,8 @@ on sound resemblance and, in particular, on the distribution of cognates
 excluding (or minimizing) instances of horizontal contact (word
 borrowing), linguists can reconstruct the history of languages with word
 lists of cognates which are fed in computational Bayesian phylogenetic
-methods. In this paper (\[Heggarty et
-al. 2023\]<https://www.science.org/doi/10.1126/science.abg0818>) the
+methods. In this paper ([Heggarty et
+al. 2023](<https://www.science.org/doi/10.1126/science.abg0818>)) the
 authors used a dataset of 109 modern and 52 time-calibrated historical
 Indo-European languages (extinct ancient languages). Here is a
 simplified tree showing their result: a time-calibrated history of the
@@ -547,8 +554,7 @@ left and the linguistic tree on the right:
     library("phytools")
     plot(cophylo(phy1,phy2,rotate=T), fsize=0.6)
 
-    ## Rotating nodes to optimize matching...
-    ## Done.
+    
 
 ![](figures/unnamed-chunk-11-1.png)
 
@@ -607,56 +613,58 @@ commands directly in the terminal.
     while (( run < 5 )); do  ##  with 5 runs for each K
     run=$(( run + 1 ));
     for K in 2 3 4 5 6 7 8 9 10; do  # select a meaningful series of K - the more Ks, the longer the run obviously
-    admixture -s time --cv EurasiaSelection_pruned.ped $K -j6 | tee log.K${K}.RUN$run.out;
+    admixture_linux-1.3.0/admixture -s time --cv EurasiaSelection_pruned.ped $K -j6 | tee log.K${K}.RUN$run.out;
     mv EurasiaSelection_pruned.$K.P K$K.Run$run.P;
     mv EurasiaSelection_pruned.$K.Q K$K.Run$run.Q;
     done;
     done
 
-Once your file is ready, run the following:
 
-    sh admixture_script.sh
 
 As this takes some time to run, i did it already before for this
-exercise. The results are stored in THIS FOLDER!!!! I run 5 iterations
-for each K from K=2 to K=10. We need to repeat the runs to exclude the
+exercise.  I run 5 iterations
+for each *K* from K=2 to K=10. We need to repeat the runs for each *K*, to exclude the
 chance of some runs not exploring the variability space well enough.
 
 For each run there are three output: .out, .P, and .Q
 
-Each run is associated to a Cross-Validation error. A good value of K
-will exhibit a low cross-validation error compared to other K values.
-Here we visualize the CV values of all the five runs for each K.
+Each run is associated to a Cross-Validation error. A good value of *K*
+will exhibit a low cross-validation error compared to other *K* values.
+Here we visualize the CV values of all the five runs for each *K*.
 
-    grep -h CV log*out > CV.txt
 
 ![](CVplot.png)
 
 ### Plotting the ADMIXTURE results for each K
 
-We can visualize the result with `PONG`
-<https://github.com/ramachandran-lab/pong> TERESA CAN YOU INSTALL THANK
-YOU!
+The results of Admixture are stored in the Google Drive Admixture folder (https://drive.google.com/drive/folders/178e0YaFRTlfTxE_RbRa8m8UWBKMRTcnS?usp=drive_link )
+
+We can visualize all the runs for each *K* with `PONG`
+<https://github.com/ramachandran-lab/pong> 
+
+Which you can install in your computer.
 
 Open the terminal in the folder where the ADMIXTURE results are, and run
 
     pong -m filemap -i famm.txt -n listAdmixture.txt
 
-`PONG` uses the filemap to localize the names of each run for each K,
+`PONG` uses the filemap to localize the names of each run for each *K*,
 the famm.txt to match each individual with a population name, and the
 listAdmixture.txt to order the populations in a way that makes some
-sense for us. I grouped populations by language family, and sort them
+sense for us. I grouped populations by language family, and sorted them
 according to their longitude.
 
 Follow `PONG` ’s instructions in the terminal, and open the browser with
 a dedicated link. You can visualize and explore the admixture results in
 an interactive way, zooming in regions of interest. Note that for some
-K, more than one configurations are found by Admixture.
+*K*, more than one configurations are found by Admixture.
 
-![](admixtureFigure.png) Another way to visualize Admixture results, is
+![](admixtureFigure.png) 
+
+Another way to visualize Admixture results is
 on a map, as separate population frequencies. We can pick the results at
 K=5, which was associated to a low Cross Validation error, and plot them
-on the map.
+on the map. Note that the package 'scatterpie' runs only in the conda  bioinf environment.
 
     library(scatterpie) # to make pie charts
 
@@ -689,6 +697,7 @@ on the map.
     coord_fixed()  
 
 ![](figures/unnamed-chunk-12-1.png)
+
 
 Look at patterns across populations. Do they follow a geographic
 structure? Is there a sign of Admixture?
@@ -723,6 +732,7 @@ certain language families.
       facet_wrap(~ Component, ncol = 1)
 
 ![](figures/unnamed-chunk-13-1.png)
+
 
 Are some ancestries associated to specific language families, or they
 are just characteristic of different geographic and ecological regions?
