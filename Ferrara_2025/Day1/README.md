@@ -1,3 +1,5 @@
+# Day 1 - Introduction to UNIX and Github
+
 # SIBE summmerschool 2025
 
 **Welcome!**
