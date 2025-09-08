@@ -1,3 +1,5 @@
+# Day 2 - Comparative Genomics
+
 # Pangenome graphs and their applications to biodiversity genomics
 
 You will find the exercise of the day at: 
