@@ -2,6 +2,8 @@
 
 **Chiara Barbieri**
 
+9th September 2025
+
 # Genetic Structure and Language Diversity in Europe
 
 Population genetics practical: PCA, F<sub>ST</sub>, ADMIXTURE, and
@@ -20,10 +22,10 @@ Goals:
 
 For this practical you will be working with:
 
--   The terminal of your computer
--   Your local RStudio
--   A internet browser
--   A parallel terminal with the conda environment for specific R packages
+-   The terminal of your computer, working with your local R
+-   An internet browser
+-   A parallel terminal with the conda environment *popgen* for specific R packages
+-   A parallel terminal with the conda environment *bioinf* for the software `PLINK`
 
 In the terminal, download the whole SIBE summer school folder as 
 
@@ -34,11 +36,9 @@ Deactivate conda base environment if needed:
 
     conda deactivate
 
-Set the working directory in your R pointing to your computer
-location where you downloaded the files. (Session –&gt; Set Working
-Directory –&gt; Choose Directory)
 
-The genotype exercise file is too heavy to be stored in Github. You can download it from here: https://drive.google.com/drive/folders/1kqdUFLaDe13E-7h2n9prKwY2Sc5eIDH_?usp=sharing
+
+The genotype data file is too heavy to be stored in Github. You can download it from here: https://drive.google.com/drive/folders/1kqdUFLaDe13E-7h2n9prKwY2Sc5eIDH_?usp=sharing
 
 
 ## A dataset of Human Diversity
@@ -125,6 +125,9 @@ the geographic coverage:
        geom_label(data=eurasia_pops,aes(x=lon, y=lat,label =PopName,color=LangFamily), size=0.5, alpha=0.5) +
       geom_label_repel(force = 1)+
        scale_colour_manual(values=colorini) # manual assign colors
+       
+    # save the map figure
+       ggsave("mapEurope.pdf", height=7, width=7)
 
 ![](figures/unnamed-chunk-1-1.png)
 
@@ -144,16 +147,16 @@ You can use it by calling the command in your terminal as
 
     plink
 
-PLINK is a tool created for genome-wide association studies (GWAS) and
-research in population genetics. PLINK parses each command line as a
+`PLINK` is a tool created for genome-wide association studies (GWAS) and
+research in population genetics. `PLINK` parses each command line as a
 collection of flags (each of which starts with two dashes), plus
-parameters (which immediately follow a flag). Because PLINK was
+parameters (which immediately follow a flag). Because `PLINK` was
 developed for GWAS medical studies, some basic information in the input
 files will be not used in our analysis, such as pedigree or phenotype.
 
 ### Different formats for input files
 
-The native PLINK formats consist of tables of where each sample is
+The native `PLINK` formats consist of tables of where each sample is
 associated to a set of variant calls.
 
 The input file formats come in two versions: binary (.bed + .bim + .fam)
@@ -199,7 +202,7 @@ The command line of `plink` is
     plink --file yourfile --flag modifiers that makes some action on your file
 
 where *yourfile* is the root name of the two text files .ped and .map.
-if you use the flag *–bfile*, instead, you call the three binary files
+if you use the flag *--bfile*, instead, you call the three binary files
 .bed, .bin and .fam.
 
 We start with some example: pass from one file format to the other and
@@ -239,14 +242,14 @@ and between the samples.
 Now we run a `plink` command to explore F, the degree of consanguinity,
 and eventually delete outliers with a very high F.
 
-*–het* computes observed and expected autosomal homozygous genotype
+*--het* computes observed and expected autosomal homozygous genotype
 counts for each sample, and reports F coefficient estimates
 (i.e.(\[observed hom. count\] - \[expected count\]) / (\[total
 observations\] - \[expected count\])) to *plink.het*.
 
     plink --bfile EurasiaSelection --het
 
-Visualize the difference in homozygosity between language families.
+Visualize the difference in homozygosity between language families, in R.
 
     # Import file with heterozigosity info
     het <- read.table("plink.het", header=T)
@@ -255,10 +258,12 @@ Visualize the difference in homozygosity between language families.
     het <- read.table("plink.het", header=T)
     het <- het %>%  dplyr::rename(Sample_ID = IID)
 
-    # Join by Sample_ID
+    # Join by Sample_ID and add information on the samples
     fam_annotated <- left_join(fam_annotated, het[, c("Sample_ID", "F")], by = "Sample_ID")
+    write.csv(fam_annotated, "fam_annotated.csv", row.names = F, quote=F) 
 
 
+    # Plot
     ggplot(fam_annotated, aes(x = reorder(LangFamily, F), y = F, fill = LangFamily)) +
       geom_boxplot(outlier.size = 0.8) +
       scale_fill_manual(values=colorini)+
@@ -295,7 +300,7 @@ Visualize the difference in homozygosity on a map.
 
 ## PCA
 
-With the modifier *–pca*. `plink` extracts the top 20 principal
+With the modifier *--pca*. `plink` extracts the top 20 principal
 components of the variance-standardized relationship matrix. The results
 consist in a *.eigenvec* file with the coordinates for each individual
 in rows and eigenvectors in columns, and a *.eigenval* which explains
@@ -326,7 +331,7 @@ yourself? Once you run the PCA, we can plot it in R.
 ![](figures/unnamed-chunk-5-1.png)
 
 How are the language families distributed across the genetic diversity
-of Eurasia? Can you plot Dimension 1 against Dimension 3 - PC1 vs PC3?
+of Eurasia? Can you plot Dimension 1 against Dimension 3 i.e. PC1 vs PC3?
 
 ------------------------------------------------------------------------
 
@@ -375,15 +380,23 @@ distance matrix, which is stored in your files.
 How to display population distances? We can use a tree visualization,
 keeping in mind that this does not correspond to actual population
 evolutionary and demographic pathway, but just as a graphic
-representation of relative distances. We can use a Neighbor-Joining tree
-display as implemented in the package ‘ape’. Note that the package 'ggtree' used to visualize trees does some conflict with the R version and tidypopgen, so we will use it by activating the 
+representation of relative distances. We can use a Neighbor-Joining tree (NJ tree)
+display as implemented in the package ‘ape’. Note that the package 'ggtree' used to visualize trees does some conflict with the R version and tidypopgen, so we will use it in another terminal window by activating the 
 
     conda activate popgen
 
 Back in R:
 
     library(ape)
+    eurasia_pops <- read_csv("EurasiaInfoPop.csv")
+      colorini <- c("#E41A1C", "#377EB8", "#4DAF4A", 
+                  "cyan2" , "#FF7F00", "#FFFF33", 
+                   "#A65628", "#984EA3","#F781BF")
+                   
+    pairwise_fsts <- read.table("pairwise_fsts1.txt", sep="\t", header=T, row.names=1)
+    pairwise_fsts<-as.matrix(pairwise_fsts)
 
+    # generate the NJ tree
     fst_tree <- nj(pairwise_fsts) 
     fst_tree$edge.length[fst_tree$edge.length < 0] = 0.002 # manual correction for negative branches in the nj tree
     tip_meta <- eurasia_pops[match(fst_tree$tip.label, eurasia_pops$PopName), ]
@@ -435,6 +448,8 @@ Cavalli-Sforza and colleagues in 1988.
 
 ![](CavalliSforzaTree.png)<!-- -->
 
+Let's go to the local terminal where we have R. 
+
 First we subset the genetic distances:
 
     library("reshape")
@@ -475,18 +490,20 @@ First we subset the genetic distances:
       )
 
 Second, we extract the linguistic distances from the Bayesian
-phylogenetic tree:
+phylogenetic tree of Heggarty et al.:
 
     AUS<-read.nexus("IECoR_Main_M3_Binary_Covarion_Rates_By_Mg_Bin_mcc.tree")
 
      # select only the tips i have, from linguistic tree.
     alberoLang <- keep.tip(AUS, listAUSname)
 
-    distancealberoLang<-cophenetic.phylo(alberoLang) # 
+    distancealberoLang<-cophenetic.phylo(alberoLang) #  extract the distances from the language tree
     distancealberoLang<-distancealberoLang/2*1000 # remember the distances are double!!
+    
     # the same distances, but in "melt" format
     MELTdistancealberoLang<-melt(distancealberoLang,varnames=c('Lang1', 'Lang2'))
     colnames(MELTdistancealberoLang)[3]<-"Langdist"
+    
     # associate the glottocode so i can match with the genetic data
     MELTdistancealberoLang <- MELTdistancealberoLang %>%
       left_join(
@@ -522,7 +539,7 @@ will be repeated for all the populations that speak the same language.
       distinct()  # delete duplicated rows
 
 
-    # make the language time matrix with the populations present in gelato
+    # make the language time matrix with the populations present in GeLaTo
 
     timetreelangMatrix<-matrix(NA, length(listpopLang),length(listpopLang))
     rownames(timetreelangMatrix)<-listpopLang
@@ -537,7 +554,7 @@ will be repeated for all the populations that speak the same language.
       }
     }
 
-And finally, we make the tree comparison, with the genetic tree on the
+And finally, we elaborate the tree comparison, with the genetic tree on the
 left and the linguistic tree on the right:
 
     # now, trees
@@ -560,21 +577,21 @@ left and the linguistic tree on the right:
 
 Spot the major differences between the two structures. This comparison
 can be used to identify language shifts or mismatches in the linguistic
-and genetic structure of Indo-European.
+and genetic structure of the Indo-European speakers.
 
 ------------------------------------------------------------------------
 
 # ADMIXTURE analysis
 
 ADMIXTURE analysis identifies ancestry components shared between
-individuals. Similarily to PCA, it is unsupervised analysis method. It
+individuals. Similarily to PCA, it is an unsupervised analysis method. It
 estimates the proportion of ancestry from each source population for
 each individual, without needing to know the source populations
 beforehand.
 
 It takes `plink` format input files.
 
-Make admixture executable with
+In your local terminal, make admixture executable with
 
     chmod 777 admixture_linux-1.3.0/admixture
 
@@ -585,12 +602,14 @@ Run admixture in your terminal as
 ### Pruning
 
 First, we prune the dataset for excluding the SNPs in Linkage, with
-Plink. The resulting file will have less SNPs, and the computation will
+`plink`. The resulting file will have less SNPs, and the computation will
 be faster.
 
 The settings define window size, step and the r2 threshold. It is a
 setting compatible with the density of SNPs on the human genome
 according to the SNP chip array we are considering.
+
+Run in the bioinf Conda environment
 
     plink --bfile EurasiaSelection --indep-pairwise 200 25 0.4 --out x.tmp
     plink --bfile EurasiaSelection --extract x.tmp.prune.in --recode12 --out EurasiaSelection_pruned
@@ -602,11 +621,10 @@ How many SNPs are left after pruning?
 Now the proper ADMIXTURE run. The following commands will perform 5 runs
 of ADMIXTURE for each *K* (number of ancestry blocks) desired. One value
 of *K* will be more supported by the analysis: the one with the lowest
-associated cross-validation error. This *K* will be considered as the
-best representation of the actual data variation.
+associated cross-validation error. 
 
 Copy-paste the commands below in a file called `admixture_script.sh` and
-then run it in the terminal as sh admixture\_script.sh - Or run these
+then run it in the terminal as sh admixture_script.sh - Or run these
 commands directly in the terminal.
 
     typeset -i run=0
@@ -623,7 +641,7 @@ commands directly in the terminal.
 
 As this takes some time to run, i did it already before for this
 exercise.  I run 5 iterations
-for each *K* from K=2 to K=10. We need to repeat the runs for each *K*, to exclude the
+for each *K* from K=2 to K=10. We need to repeat several runs for each *K*, to exclude the
 chance of some runs not exploring the variability space well enough.
 
 For each run there are three output: .out, .P, and .Q
@@ -675,6 +693,7 @@ on the map. Note that the package 'scatterpie' runs only in the conda  bioinf en
     colnames(K5) <- paste0("Ancestry", 1:5)
 
     # Bind to population info
+    fam_annotated <- read.csv("fam_annotated.csv")
     eurasia_admix <- cbind(fam_annotated, K5)
 
     # MAP
