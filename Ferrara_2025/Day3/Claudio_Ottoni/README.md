@@ -6,6 +6,6 @@ Here you will find the jupyter noteobook file, the fasta file containing mtDNA d
 
 Unfortunately GitHub doesn't allow the upload of files > 100 Mbp. You will find the files in your local pc in the folder condivisione
 
-  cp -r /mnt/condivisione/panel_cats_2025_Europe /your/local/path/Claudio_Ottoni
+    cp -r /mnt/condivisione/panel_cats_2025_Europe /your/local/path/Claudio_Ottoni
 
 or you can download them from Google Drive <a href="https://drive.google.com/drive/folders/1KoxT9EXJW8BadfaC3klvd3GfayCnzhVq">here</a>.
